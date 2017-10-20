@@ -11,9 +11,10 @@ class speedometer(object):
     self.speed_hand = self.canvas.create_line(250, 250, 250, 450)
     self.root.after(1 , self.animation)
     self.root.mainloop() 
+  
   def animation(self):
     while 1 == 1:
-      for angle in range(0, 4):
+      for angle in range(0, 10):
         time.sleep(.0025)
         x = 200 * math.sin(angle)
         y = 200 * math.cos(angle) 
