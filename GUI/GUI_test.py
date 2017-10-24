@@ -124,13 +124,14 @@ class Speed(object):
                     end = time.time()
                     elapsedTime = (end - start)
                     start = end
-                    if elapsedTime < 0.026:
+                    if elapsedTime < 0.08:
                         velocity = 0
-                        print(velocity)
+                        #print(velocity)
                         x = 200 * math.sin(5.495) + 250
-                        y = (200 * math.cos(5.495) + 250
+                        y = 200 * math.cos(5.495) + 250
                         time.sleep(.05)
                         self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
                         self.canvas.update()
                     else:
                         velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
@@ -138,7 +139,7 @@ class Speed(object):
                         #print(elapsedTime)
                         time.sleep(0.025)
                         x = 200 * math.sin(5.495-.0785*velocity) + 250
-                        y = (200 * math.cos(5.495-.0785*velocity)) + 250
+                        y = 200 * math.cos(5.495-.0785*velocity)) + 250
                         self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
                         self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
                         time.sleep(.05)
@@ -174,12 +175,5 @@ class Speed(object):
 
 dash = Speed(Tk())
 print("Lets begin! Press CTRL+C to exit")
-
 dash.root.after(1,dash.updateSpeed)
-
 dash.root.mainloop()
-
-
-
-
-
