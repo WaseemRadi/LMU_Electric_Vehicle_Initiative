@@ -59,8 +59,6 @@ class speedometer(object):
 
     self.root.after(1 , self.animation)
     self.root.mainloop()
-
-=======
     self.canvas.pack() 
     self.display = self.canvas.create_oval(25, 25, 475, 475, fill = '#C0C0C0')
     self.display2 = self.canvas.create_oval(50, 50, 450, 450, fill = 'white')
@@ -97,7 +95,6 @@ class speedometer(object):
     self.root.after(1 , self.animation)
     self.root.mainloop()   
   
->>>>>>> 4a8674f5d3c508e0272ad3392a1e259ce281b738
   def animation(self):
     while 1 == 1:
       for angle in range(350, 35, -1):
