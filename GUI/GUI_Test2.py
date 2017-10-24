@@ -94,8 +94,8 @@ class speedometer(object):
             print(velocity)
             #print(elapsedTime)
           time.sleep(0.025)
-          x = 200 * math.sin(5.495-.0785*pSpeed) + 250
-          y = (200 * math.cos(5.495-.0785*pSpeed)) + 250
+          x = 200 * math.sin(5.495-.0785*velocity) + 250
+          y = (200 * math.cos(5.495-.0785*velocity)) + 250
           self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
           self.canvas.update()
               
