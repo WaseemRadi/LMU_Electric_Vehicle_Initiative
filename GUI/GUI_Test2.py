@@ -18,8 +18,8 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 
-from tkinter import *
-import math
+from tkinter import *math
+import 
 import time
 import RPi.GPIO as GPIO
 import time
@@ -72,6 +72,7 @@ class speedometer(object):
     in2mi = 63360  #inches in a mile
     sec2hr = 3600  #seconds in an hour
     velocity = 0
+    t1 = self.canvas.create_text(250, 300, font = 'helvetica 20 bold')
 
     # Pin Setup:
     GPIO.setmode(GPIO.BCM)
@@ -97,8 +98,8 @@ class speedometer(object):
           x = 200 * math.sin(5.495-.0785*velocity) + 250
           y = (200 * math.cos(5.495-.0785*velocity)) + 250
           self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-          t1 = self.canvas.create_text(250, 300, font = 'helvetica 20 bold')
-          self.canvas.config(t1, text = str(velocity))
+          
+          self.canvas.itemconfig(t1, text = str(velocity))
           self.canvas.update()
               
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
