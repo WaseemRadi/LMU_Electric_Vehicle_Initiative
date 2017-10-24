@@ -46,7 +46,6 @@ class Speed(object):
         self.initializeValues()
         self.makeMainFrame()
         self.makeCanvas()
-        self.root.after(self.frame_rate, self.updateSpeed)
 
     def initializeValues(self):
         self.speedFont = "helvetica 50 bold"
@@ -142,7 +141,6 @@ class Speed(object):
                         self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
                         self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
                         time.sleep(.05)
-                        self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
                         self.canvas.update()
         except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
             GPIO.cleanup()        # cleanup all GPIO
@@ -174,8 +172,9 @@ class Speed(object):
         self.root.after(self.frame_rate, self.updateRPM)
 
 dash = Speed(Tk())
+dash.root.after(1,self.updateSpeed)
 print("Lets begin! Press CTRL+C to exit")
-
 dash.root.mainloop()
+
 
 
