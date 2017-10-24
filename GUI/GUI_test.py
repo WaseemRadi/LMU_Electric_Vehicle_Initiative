@@ -188,9 +188,8 @@ if __name__ == '__main__':
                     velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
                     print(velocity)
                     dash.updateSpeed(pSpeed = velocity)
-                    dash.root.mainloop()
                     #print(elapsedTime)
                 time.sleep(0.025)
-        dash.root.mainloop()
+            dash.root.mainloop()
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         GPIO.cleanup()        # cleanup all GPIO
