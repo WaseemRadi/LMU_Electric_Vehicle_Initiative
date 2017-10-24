@@ -46,6 +46,7 @@ class Speed(object):
         self.initializeValues()
         self.makeMainFrame()
         self.makeCanvas()
+        self.root.after(self.frame_rate, self.updateSpeed)
 
     def initializeValues(self):
         self.speedFont = "helvetica 50 bold"
@@ -148,7 +149,6 @@ class Speed(object):
 
         except ValueError:
             pass
-        self.root.after(self.frame_rate, self.updateSpeed)
 
     def updateRPM(self, pRPM=None):
         if pRPM is None:
@@ -177,4 +177,5 @@ dash = Speed(Tk())
 print("Lets begin! Press CTRL+C to exit")
 
 dash.root.mainloop()
+
 
