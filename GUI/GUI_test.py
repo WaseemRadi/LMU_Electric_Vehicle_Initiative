@@ -31,6 +31,15 @@ import RPi.GPIO as GPIO
 
 class Speed(object):
     def __init__(self, root):
+        hall = 18
+        start = 0
+        end = 0
+        wheel_c = 82   #in for wheel circumference
+        in2mi = 63360  #inches in a mile
+        sec2hr = 3600  #seconds in an hour
+        velocity = 0
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
 
         self.root = root
 
@@ -106,36 +115,39 @@ class Speed(object):
           y1 = 210 * math.cos(ang) + 250
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
 
-    def updateSpeed(self, pSpeed=None):
-        if pSpeed is None:
-            try:
-                self.tempCounter += 1
+    def updateSpeed(self):
+        try:
+            start = time.time()
+            while True:
+                if GPIO.input(hall) == 0: # Hall effect is triggered
+                end = time.time()
+                elapsedTime = (end - start)
+                start = end
+                if elapsedTime < 0.026:
+                    velocity = 0
+                    print(velocity)
+                    x = 200 * math.sin(5.495-.0785*velocity) + 250
+                    y = (200 * math.cos(5.495-.0785*velocity)) + 250
+                    time.sleep(.05)
+                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                    self.canvas.update()
+                else:
+                    velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
+                    print(velocity)
+                    #print(elapsedTime)
+                    time.sleep(0.025)
+                    x = 200 * math.sin(5.495-.0785*velocity) + 250
+                    y = (200 * math.cos(5.495-.0785*velocity)) + 250
+                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                    self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
+                    time.sleep(.05)
+                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                    self.canvas.update()
+        except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
+            GPIO.cleanup()        # cleanup all GPIO
 
-                if (self.tempCounter > self.maxSpeed):
-                    self.tempCounter = self.maxSpeed
-                if (self.tempCounter < 0):
-                    self.tempCounter = 0
-
-                self.speed = str(self.tempCounter)
-                # self.canvas.itemconfigure(self.speedText, text=self.speed)
-                # time.sleep(.025)
-                # x = 200 * math.sin(math.pi * self.tempCounter*5.25/ 192) + 250
-                # y = (200 * math.cos(math.pi * self.tempCounter*5.25/ 192)) + 250
-                # self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                # self.canvas.update()
-
-            except ValueError:
-                pass
-        else:
-            try:
-                self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
-                time.sleep(.05)
-                x = 200 * math.sin(5.495-.0785*pSpeed) + 250
-                y = (200 * math.cos(5.495-.0785*pSpeed)) + 250
-                self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                self.canvas.update()
-            except ValueError:
-                pass
+        except ValueError:
+            pass
         self.root.after(self.frame_rate, self.updateSpeed)
 
     def updateRPM(self, pRPM=None):
@@ -160,34 +172,8 @@ class Speed(object):
             except ValueError:
                 pass
         self.root.after(self.frame_rate, self.updateRPM)
-if __name__ == '__main__':
-    hall = 18
-    start = 0
-    end = 0
-    wheel_c = 82   #in for wheel circumference
-    in2mi = 63360  #inches in a mile
-    sec2hr = 3600  #seconds in an hour
-    velocity = 0
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
-    dash = Speed(Tk())
-    print("Lets begin! Press CTRL+C to exit")
 
-    try:
-        start = time.time()
-        dash.root.mainloop()
-        if GPIO.input(hall) == 0: # Hall effect is triggered
-            end = time.time()
-            elapsedTime = (end - start)
-            start = end
-            if elapsedTime < 0.026:
-                velocity = 0
-                print(velocity)
-            else:
-                velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
-                print(velocity)
-                dash.updateSpeed(pSpeed = velocity)
-                #print(elapsedTime)
-            time.sleep(0.025)
-    except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-        GPIO.cleanup()        # cleanup all GPIO
+dash = Speed(Tk())
+print("Lets begin! Press CTRL+C to exit")
+
+dash.root.mainloop()
