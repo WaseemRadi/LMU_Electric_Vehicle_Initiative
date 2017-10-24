@@ -141,7 +141,7 @@ class Speed(object):
                         x = 200 * math.sin(5.495-.0785*velocity) + 250
                         y = (200 * math.cos(5.495-.0785*velocity)) + 250
                         self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
+                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
                         time.sleep(.05)
                         self.canvas.update()
         except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
