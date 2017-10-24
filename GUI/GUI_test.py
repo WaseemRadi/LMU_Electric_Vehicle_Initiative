@@ -120,29 +120,29 @@ class Speed(object):
             start = time.time()
             while True:
                 if GPIO.input(hall) == 0: # Hall effect is triggered
-                end = time.time()
-                elapsedTime = (end - start)
-                start = end
-                if elapsedTime < 0.026:
-                    velocity = 0
-                    print(velocity)
-                    x = 200 * math.sin(5.495-.0785*velocity) + 250
-                    y = (200 * math.cos(5.495-.0785*velocity)) + 250
-                    time.sleep(.05)
-                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                    self.canvas.update()
-                else:
-                    velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
-                    print(velocity)
-                    #print(elapsedTime)
-                    time.sleep(0.025)
-                    x = 200 * math.sin(5.495-.0785*velocity) + 250
-                    y = (200 * math.cos(5.495-.0785*velocity)) + 250
-                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                    self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
-                    time.sleep(.05)
-                    self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-                    self.canvas.update()
+                    end = time.time()
+                    elapsedTime = (end - start)
+                    start = end
+                    if elapsedTime < 0.026:
+                        velocity = 0
+                        print(velocity)
+                        x = 200 * math.sin(5.495-.0785*velocity) + 250
+                        y = (200 * math.cos(5.495-.0785*velocity)) + 250
+                        time.sleep(.05)
+                        self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                        self.canvas.update()
+                    else:
+                        velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
+                        print(velocity)
+                        #print(elapsedTime)
+                        time.sleep(0.025)
+                        x = 200 * math.sin(5.495-.0785*velocity) + 250
+                        y = (200 * math.cos(5.495-.0785*velocity)) + 250
+                        self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(pSpeed)))
+                        time.sleep(.05)
+                        self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
+                        self.canvas.update()
         except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
             GPIO.cleanup()        # cleanup all GPIO
 
@@ -177,3 +177,4 @@ dash = Speed(Tk())
 print("Lets begin! Press CTRL+C to exit")
 
 dash.root.mainloop()
+
