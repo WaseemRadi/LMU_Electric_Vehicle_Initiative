@@ -175,22 +175,19 @@ if __name__ == '__main__':
 
     try:
         start = time.time()
-
-        while True:
-
-            if GPIO.input(hall) == 0: # Hall effect is triggered
-                end = time.time()
-                elapsedTime = (end - start)
-                start = end
-                if elapsedTime < 0.026:
-                    velocity = 0
-                    print(velocity)
-                else:
-                    velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
-                    print(velocity)
-                    dash.updateSpeed(pSpeed = velocity)
-                    #print(elapsedTime)
-                time.sleep(0.025)
         dash.root.mainloop()
+        if GPIO.input(hall) == 0: # Hall effect is triggered
+            end = time.time()
+            elapsedTime = (end - start)
+            start = end
+            if elapsedTime < 0.026:
+                velocity = 0
+                print(velocity)
+            else:
+                velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
+                print(velocity)
+                dash.updateSpeed(pSpeed = velocity)
+                #print(elapsedTime)
+            time.sleep(0.025)
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         GPIO.cleanup()        # cleanup all GPIO
