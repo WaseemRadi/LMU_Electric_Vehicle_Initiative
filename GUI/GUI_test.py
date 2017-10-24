@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     try:
         start = time.time()
-        dash.root.mainloop()
+
         while True:
 
             if GPIO.input(hall) == 0: # Hall effect is triggered
@@ -191,5 +191,6 @@ if __name__ == '__main__':
                     dash.updateSpeed(pSpeed = velocity)
                     #print(elapsedTime)
                 time.sleep(0.025)
+        dash.root.mainloop()
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
         GPIO.cleanup()        # cleanup all GPIO
