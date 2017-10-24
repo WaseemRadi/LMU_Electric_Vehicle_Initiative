@@ -31,15 +31,7 @@ import RPi.GPIO as GPIO
 
 class Speed(object):
     def __init__(self, root):
-        hall = 18
-        start = 0
-        end = 0
-        wheel_c = 82   #in for wheel circumference
-        in2mi = 63360  #inches in a mile
-        sec2hr = 3600  #seconds in an hour
-        velocity = 0
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
+        
 
         self.root = root
 
@@ -116,6 +108,16 @@ class Speed(object):
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
 
     def updateSpeed(self):
+        hall = 18
+        start = 0
+        end = 0
+        wheel_c = 82   #in for wheel circumference
+        in2mi = 63360  #inches in a mile
+        sec2hr = 3600  #seconds in an hour
+        velocity = 0
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
+        
         try:
             start = time.time()
             while True:
