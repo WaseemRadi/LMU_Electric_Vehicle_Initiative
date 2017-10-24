@@ -98,7 +98,7 @@ class speedometer(object):
           y = (200 * math.cos(5.495-.0785*velocity)) + 250
           self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
           t1 = self.canvas.create_text(250, 300, font = 'helvetica 20 bold')
-          self.canvas.itemconfigure(t1, text = str(velocity))
+          self.canvas.config(t1, text = str(velocity))
           self.canvas.update()
               
     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
