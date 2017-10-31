@@ -1,0 +1,101 @@
+from tkinter import * 
+import math, time
+
+class Dashboard(object):
+  def __init__(self):
+    self.root = Tk()
+    self.canvas = Canvas(self.root, width = 1300, height = 500, bg = 'black')
+    self.speedometer()
+    self.range_meter()
+    self.wattmeter()
+    self.clock()
+    self.canvas.pack()
+    self.root.mainloop()
+  
+  def speedometer(self):
+    self.canvas.create_oval(425, 25, 875, 475, fill = '#C0C0C0')
+    self.canvas.create_oval(450, 50, 850, 450, fill = 'white')  
+    self.canvas.create_text(650, 230, text = "MPH", font = 'helvetica 20 bold', fill = 'black')
+    self.speed_hand = self.canvas.create_line(650, 250, 650, 450, width = '4', fill = 'red')
+    
+    count = 60
+    for i in range(2,15):
+      ang = i * math.pi / 8 
+      x = 225 * math.sin(ang) + 650
+      y = 225 * math.cos(ang) + 250 
+      x1 = 200 * math.sin(ang) + 650 
+      y1 = 200 * math.cos(ang) + 250
+      x2 = 185 * math.sin(ang) + 650 
+      y2 = 185 * math.cos(ang) + 250 
+      
+      self.canvas.create_line(int(x), int(y), int(x1), int(y1)) 
+      self.canvas.create_text(x2, y2, text= str(count), font = 'helvetica 10 bold', fill = 'blue')   
+      count -= 5
+
+    for i in range(4,29):
+      ang = i * math.pi / 16
+      x = 225 * math.sin(ang) + 650
+      y = 225 * math.cos(ang) + 250
+      x1 = 212 * math.sin(ang) + 650
+      y1 = 212 * math.cos(ang) + 250
+      self.canvas.create_line(int(x), int(y), int(x1), int(y1))
+
+  def range_meter(self):
+    self.canvas.create_oval(25, 125, 375, 475, fill = '#C0C0C0')
+    self.canvas.create_oval(50, 150, 350, 450, fill = 'white') 
+    self.canvas.create_text(200, 280, text = 'Range', font = 'helvetica 15 bold', fill = 'black')
+    self.range_hand = self.canvas.create_line(200, 300, 200, 450, width = '4', fill = 'red')
+    
+    count = 60
+    for i in range(1, 8):
+      ang = i * math.pi / 4
+      x = 175 * math.sin(ang) + 200
+      y = 175 * math.cos(ang) + 300 
+      x1 = 149 * math.sin(ang) + 200 
+      y1 = 149 * math.cos(ang) + 300
+      x2 = 135 * math.sin(ang) + 200 
+      y2 = 135 * math.cos(ang) + 300 
+      
+      self.canvas.create_line(int(x), int(y), int(x1), int(y1)) 
+      self.canvas.create_text(x2, y2, text= str(count), font = 'helvetica 10 bold', fill = 'blue')   
+      count -= 10
+
+    for i in range(4,29):
+      ang = i * math.pi / 16
+      x = 175 * math.sin(ang) + 200
+      y = 175 * math.cos(ang) + 300
+      x1 = 160 * math.sin(ang) + 200
+      y1 = 160 * math.cos(ang) + 300
+      self.canvas.create_line(int(x), int(y), int(x1), int(y1))
+
+  def wattmeter(self):
+    self.canvas.create_oval(925, 125, 1275, 475, fill = '#C0C0C0')
+    self.canvas.create_oval(950, 150, 1250, 450, fill = 'white') 
+    self.canvas.create_text(1100, 280, text = 'KW', font = 'helvetica 15 bold', fill = 'black')
+    self.power_hand = self.canvas.create_line(1100, 300, 1100, 450, width = '4', fill = 'red')
+
+    count = 10
+    for i in range(2, 13):
+      ang = i * math.pi / 7
+      x = 175 * math.sin(ang) + 1100
+      y = 175 * math.cos(ang) + 300 
+      x1 = 149 * math.sin(ang) + 1100 
+      y1 = 149 * math.cos(ang) + 300
+      x2 = 135 * math.sin(ang) + 1100 
+      y2 = 135 * math.cos(ang) + 300 
+
+      self.canvas.create_line(int(x), int(y), int(x1), int(y1)) 
+      self.canvas.create_text(x2, y2, text= str(count), font = 'helvetica 10 bold', fill = 'blue')   
+      count -= 1 
+
+  def clock(self):
+    self.time = time.strftime('%H:%M:%S')
+    self.watch = self.canvas.create_text(1150, 50, text = self.time, font = 'helvetica 30 bold', fill = 'white')    
+    self.root.after(200, self.change_time)
+
+  def change_time(self):
+    self.time2 = time.strftime('%H:%M:%S')
+    self.canvas.itemconfig(self.watch, text = self.time2)
+    self.root.after(200, self.change_time)
+    
+Dashboard()
