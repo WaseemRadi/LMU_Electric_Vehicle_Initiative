@@ -38,6 +38,8 @@ class Speed(object):
         self.initializeValues()
         self.makeMainFrame()
         self.makeCanvas()
+        self.clock()
+        self.change_time()
 
     def initializeValues(self):
         self.speedFont = "helvetica 50 bold"
@@ -92,6 +94,9 @@ class Speed(object):
         self.right_art2 = self.canvas.create_arc(625, 65, 1000, 440, start = -125, extent = 250 ,fill = 'Black')
         self.display = self.canvas.create_oval(self.circleX1 , self.circleY1, self.circleX2, self.circleY2, fill = '#C0C0C0')
         self.display2 = self.canvas.create_oval(self.circleX1+25, self.circleY1+25, self.circleX2-25, self.circleY2-25, fill = 'Black')
+
+        self.speedBox = self.canvas.create_rectangle(self.centerX-70, self.centerY-25, self.centerX+70, self.centerY+80, fill='#702B0B', outline='#C0C0C0')
+
         self.speedText = self.canvas.create_text(self.centerX, self.centerY, text=self.speed, fill=self.textColor, font=self.speedFont)
         self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 40, text="mph", fill=self.textColor, font=self.mphFont)
         self.powerText = self.canvas.create_text(self.centerX-275, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
@@ -153,6 +158,16 @@ class Speed(object):
           if i > 13:
               self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
+    
+    def clock(self):
+        self.time = time.strftime('%H:%M')
+        self.watch = self.canvas.create_text(self.centerX+50, self.centerY+70, text = self.time, font = 'helvetica 15 bold', fill = 'white')    
+        self.root.after(200, self.change_time)
+
+    def change_time(self):
+        self.time2 = time.strftime('%H:%M')
+        self.canvas.itemconfig(self.watch, text = self.time2)
+        self.root.after(200, self.change_time)
 
     def updateSpeed(self):
         hall = 18
