@@ -51,7 +51,7 @@ class Speed(object):
 
         self.canvasWidth = 1200
         self.canvasHeight = 500
-        self.circleX1 = 325
+        self.circleX1 = 325 
         self.circleX2 = 775
         self.circleY1 = 25
         self.circleY2 = 475
@@ -63,7 +63,11 @@ class Speed(object):
 
         self.speed = "0"
         self.power = "0"
+
+        self.voltage = "0"
+        
         self.tempCounter = 0
+
     def makeMainFrame(self):
         self.styleName = "TFrame"
         self.style = ttk.Style()
@@ -88,6 +92,16 @@ class Speed(object):
         self.kwLabel = self.canvas.create_text(self.centerX-300, self.centerY + 40, text="kW", fill=self.textColor, font=self.mphFont)
         self.power_hand = self.canvas.create_line(275, 250, 180*math.sin(5.590) + 275, 180*math.cos(5.590) + 250, width = '4', fill = 'blue')
         self.speed_hand = self.canvas.create_line(550, 250,  200 * math.sin(5.495) + 550,  200 * math.cos(5.495) + 250, width = '4', fill = 'red')
+
+
+
+        self.voltageMeter = self.canvas.create_rectangle(785, 115, 885, 155, fill='#702B0B', outline='#C0C0C0')
+        self.temperatureMeter = self.canvas.create_rectangle(835, 195, 935, 235, fill='#702B0B', outline='#C0C0C0')
+
+           
+
+
+
 
         for i in range(2,15):
           ang = i * math.pi / 8
