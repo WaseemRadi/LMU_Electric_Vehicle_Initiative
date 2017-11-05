@@ -98,9 +98,9 @@ class Speed(object):
         self.speedBox = self.canvas.create_rectangle(self.centerX-70, self.centerY-25, self.centerX+70, self.centerY+80, fill='#702B0B', outline='#C0C0C0')
 
         self.speedText = self.canvas.create_text(self.centerX, self.centerY, text=self.speed, fill=self.textColor, font=self.speedFont)
-        self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 40, text="mph", fill=self.textColor, font=self.mphFont)
+        self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 28, text="mph", fill=self.textColor, font='helvetica 16 bold')
         self.powerText = self.canvas.create_text(self.centerX-275, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
-        self.kwLabel = self.canvas.create_text(self.centerX-275, self.centerY + 40, text="kW", fill=self.textColor, font=self.mphFont)
+        self.kwLabel = self.canvas.create_text(self.centerX-275, self.centerY + 28, text="kW", fill=self.textColor, font='helvetica 16 bold')
         self.power_hand = self.canvas.create_line(275, 250, 180*math.sin(5.590) + 275, 180*math.cos(5.590) + 250, width = '4', fill = 'blue')
         self.speed_hand = self.canvas.create_line(550, 250,  200 * math.sin(5.495) + 550,  200 * math.cos(5.495) + 250, width = '4', fill = 'red')
 
@@ -160,12 +160,12 @@ class Speed(object):
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
     
     def clock(self):
-        self.time = time.strftime('%H:%M')
-        self.watch = self.canvas.create_text(self.centerX+50, self.centerY+70, text = self.time, font = 'helvetica 15 bold', fill = 'white')    
+        self.time = time.strftime('%m/%d/%Y     %I:%M')
+        self.watch = self.canvas.create_text(self.centerX, self.centerY+70, text = self.time, font = 'helvetica 15 bold', fill = 'white')    
         self.root.after(200, self.change_time)
 
     def change_time(self):
-        self.time2 = time.strftime('%H:%M')
+        self.time2 = time.strftime('%m/%d/%Y     %I:%M')
         self.canvas.itemconfig(self.watch, text = self.time2)
         self.root.after(200, self.change_time)
 
