@@ -38,6 +38,8 @@ class Speed(object):
         self.initializeValues()
         self.makeMainFrame()
         self.makeCanvas()
+        self.clock()
+        self.change_time()
 
     def initializeValues(self):
         self.speedFont = "helvetica 50 bold"
@@ -48,6 +50,10 @@ class Speed(object):
         self.outlineColor = "white"
         self.backGroundFillColor = "black"
         self.fillColor = "black"
+
+        self.voltageFont = "helvetica 30 bold"
+        self.degree = u'\N{DEGREE SIGN}' + "F"
+        self.rangeFont = "helvetica 25 bold"
 
         self.canvasWidth = 1200
         self.canvasHeight = 500
@@ -63,7 +69,13 @@ class Speed(object):
 
         self.speed = "0"
         self.power = "0"
+
+        self.voltage = "00.0"
+        self.temperature = "000"
+        self.range = "000"
+
         self.tempCounter = 0
+
     def makeMainFrame(self):
         self.styleName = "TFrame"
         self.style = ttk.Style()
@@ -82,12 +94,28 @@ class Speed(object):
         self.right_art2 = self.canvas.create_arc(625, 65, 1000, 440, start = -125, extent = 250 ,fill = 'Black')
         self.display = self.canvas.create_oval(self.circleX1 , self.circleY1, self.circleX2, self.circleY2, fill = '#C0C0C0')
         self.display2 = self.canvas.create_oval(self.circleX1+25, self.circleY1+25, self.circleX2-25, self.circleY2-25, fill = 'Black')
+
+        self.speedBox = self.canvas.create_rectangle(self.centerX-70, self.centerY-25, self.centerX+70, self.centerY+80, fill='#702B0B', outline='#C0C0C0')
+
         self.speedText = self.canvas.create_text(self.centerX, self.centerY, text=self.speed, fill=self.textColor, font=self.speedFont)
-        self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 40, text="mph", fill=self.textColor, font=self.mphFont)
-        self.powerText = self.canvas.create_text(self.centerX-300, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
-        self.kwLabel = self.canvas.create_text(self.centerX-300, self.centerY + 40, text="kW", fill=self.textColor, font=self.mphFont)
+        self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 28, text="mph", fill=self.textColor, font='helvetica 16 bold')
+        self.powerText = self.canvas.create_text(self.centerX-275, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
+        self.kwLabel = self.canvas.create_text(self.centerX-275, self.centerY + 28, text="kW", fill=self.textColor, font='helvetica 16 bold')
         self.power_hand = self.canvas.create_line(275, 250, 180*math.sin(5.590) + 275, 180*math.cos(5.590) + 250, width = '4', fill = 'blue')
         self.speed_hand = self.canvas.create_line(550, 250,  200 * math.sin(5.495) + 550,  200 * math.cos(5.495) + 250, width = '4', fill = 'red')
+
+        self.voltageMeter = self.canvas.create_rectangle(775, 105, 875, 145, fill='#702B0B', outline='#C0C0C0')
+        self.voltageText = self.canvas.create_text(813, 125, text = self.voltage, fill = self.textColor, font = self.voltageFont)
+        self.voltageSymbol = self.canvas.create_text(860, 125, text = "V", fill = self.textColor, font = self.voltageFont)
+
+        self.temperatureMeter = self.canvas.create_rectangle(835, 168, 935, 208, fill='#702B0B', outline='#C0C0C0')
+        self.temperatureText = self.canvas.create_text(870, 188, text = self.temperature, fill = self.textColor, font = self.voltageFont)
+        self.temperatureSymbol = self.canvas.create_text(915, 188, text = self.degree, fill = self.textColor, font = self.voltageFont)
+
+        self.rangeMeter = self.canvas.create_rectangle(800, 230, 975, 270, fill='#702B0B', outline='#C0C0C0')
+        self.rangeText = self.canvas.create_text(870, 250, text = "Range: " + self.range, fill = self.textColor, font = self.rangeFont)
+        self.rangeSymbol = self.canvas.create_text(955, 250, text = "mi", fill = self.textColor, font = self.rangeFont)
+
 
         for i in range(2,15):
           ang = i * math.pi / 8
@@ -130,6 +158,16 @@ class Speed(object):
           if i > 13:
               self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
+
+    def clock(self):
+        self.time = time.strftime('%m/%d/%Y     %I:%M')
+        self.watch = self.canvas.create_text(self.centerX, self.centerY+70, text = self.time, font = 'helvetica 15 bold', fill = 'white')
+        self.root.after(200, self.change_time)
+
+    def change_time(self):
+        self.time2 = time.strftime('%m/%d/%Y     %I:%M')
+        self.canvas.itemconfig(self.watch, text = self.time2)
+        self.root.after(200, self.change_time)
 
     def updateSpeed(self):
         hall = 18
