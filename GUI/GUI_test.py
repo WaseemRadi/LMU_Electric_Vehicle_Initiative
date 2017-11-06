@@ -61,8 +61,8 @@ class Speed(object):
         self.centerY = 350
         self.maxSpeed = 60
 
-        self.speed = ""
-
+        self.speed = "0"
+        self.power = "0"
         self.tempCounter = 0
     def makeMainFrame(self):
         self.styleName = "TFrame"
@@ -76,81 +76,103 @@ class Speed(object):
         self.canvas = Canvas(self.mainFrame, background=self.backGroundColor, width=self.canvasWidth, height=self.canvasHeight, bg="black")
         self.canvas.grid(column=0, row=0, sticky=(N, E, W, S))
         # self.hubCircle = self.canvas.create_oval(self.circleX1, self.circleY1, self.circleX2, self.circleY2, outline=self.outlineColor, fill=self.backGroundFillColor)
-        self.left_arc = self.canvas.create_arc(75, 75, 475, 475 , start = 70, extent = 225, fill = '#C0C0C0')
-        self.left_art2 = self.canvas.create_arc(100, 100, 450, 450, start = 70, extent = 225 ,fill = 'Black')
+        self.left_arc = self.canvas.create_arc(75, 40, 500, 465 , start = 55, extent = 250, fill = '#C0C0C0')
+        self.left_art2 = self.canvas.create_arc(100, 65, 475, 440, start = 55, extent = 250 ,fill = 'Black')
+        self.right_arc = self.canvas.create_arc(600, 40, 1025, 465 , start = -125, extent = 250, fill = '#C0C0C0')
+        self.right_art2 = self.canvas.create_arc(625, 65, 1000, 440, start = -125, extent = 250 ,fill = 'Black')
         self.display = self.canvas.create_oval(self.circleX1 , self.circleY1, self.circleX2, self.circleY2, fill = '#C0C0C0')
         self.display2 = self.canvas.create_oval(self.circleX1+25, self.circleY1+25, self.circleX2-25, self.circleY2-25, fill = 'Black')
         self.speedText = self.canvas.create_text(self.centerX, self.centerY, text=self.speed, fill=self.textColor, font=self.speedFont)
         self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 40, text="mph", fill=self.textColor, font=self.mphFont)
-        self.speed_hand = self.canvas.create_line(250, 250, 250, 450, width = '4', fill = 'red')
+        self.powerText = self.canvas.create_text(self.centerX-300, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
+        self.kwLabel = self.canvas.create_text(self.centerX-300, self.centerY + 40, text="kW", fill=self.textColor, font=self.mphFont)
+        self.power_hand = self.canvas.create_line(275, 250, 180*math.sin(5.590) + 275, 180*math.cos(5.590) + 250, width = '4', fill = 'blue')
+        self.speed_hand = self.canvas.create_line(550, 250,  200 * math.sin(5.495) + 550,  200 * math.cos(5.495) + 250, width = '4', fill = 'red')
 
         for i in range(2,15):
           ang = i * math.pi / 8
-          x = 212 * math.sin(ang) + 250
+          x = 212 * math.sin(ang) + 550
           y = 212 * math.cos(ang) + 250
-          x1 = 200 * math.sin(ang) + 250
+          x1 = 200 * math.sin(ang) + 550
           y1 = 200 * math.cos(ang) + 250
+          x_arc = 200 * math.sin(ang) + 290
+          y_arc = 212 * math.cos(ang) + 255
+          x1_arc = 200 * math.sin(ang) + 290
+          y1_arc = 200 * math.cos(ang) + 255
+        #   if i > 6:
+        #       self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
           self.canvas.create_line(int(x), int(y), int(x1), int(y1), fill ='white')
 
         count = 60
+        power_count = 30
         for i in range(2,15):
           ang = i * math.pi / 8
-          x1 = 185 * math.sin(ang) + 250
+          x1 = 185 * math.sin(ang) + 550
           y1 = 185 * math.cos(ang) + 250
+          x_arc = 175 * math.sin(ang) + 290
+          y_arc = 175 * math.cos(ang) + 255
+          if i > 7:
+              self.canvas.create_text(x_arc, y_arc, fill = 'white', text = str(count), font = self.markerFont)
           canvas_id = self.canvas.create_text(x1, y1, fill = 'white', font = self.markerFont)
           self.canvas.itemconfig(canvas_id, text= str(count))
           count = count - 5
 
         for i in range(3,30):
           ang = i * math.pi / 16
-          x = 222 * math.sin(ang) + 250
+          x = 222 * math.sin(ang) + 550
           y = 222 * math.cos(ang) + 250
-          x1 = 210 * math.sin(ang) + 250
+          x1 = 210 * math.sin(ang) + 550
           y1 = 210 * math.cos(ang) + 250
+          x_arc = 212 * math.sin(ang) + 290
+          y_arc = 212 * math.cos(ang) + 255
+          x1_arc = 200 * math.sin(ang) + 290
+          y1_arc = 200 * math.cos(ang) + 255
+          if i > 13:
+              self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
           self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
 
-    # def updateSpeed(self):
-    #     hall = 18
-    #     start = 0
-    #     end = 0
-    #     wheel_c = 82   #in for wheel circumference
-    #     in2mi = 63360  #inches in a mile
-    #     sec2hr = 3600  #seconds in an hour
-    #     velocity = 0
-    #     GPIO.setmode(GPIO.BCM)
-    #     GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
-    #     try:
-    #         start = time.time()
-    #         while True:
-    #             if GPIO.input(hall) == 0: # Hall effect is triggered
-    #                 end = time.time()
-    #                 elapsedTime = (end - start)
-    #                 start = end
-    #                 if elapsedTime < 0.08:
-    #                     velocity = 0
-    #                     #print(velocity)
-    #                     x = 200 * math.sin(5.495) + 250
-    #                     y = 200 * math.cos(5.495) + 250
-    #                     time.sleep(.05)
-    #                     self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-    #                     self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
-    #                     self.canvas.update()
-    #                 else:
-    #                     velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
-    #                     print(velocity)
-    #                     #print(elapsedTime)
-    #                     time.sleep(0.025)
-    #                     x = 200 * math.sin(5.495-.0785*velocity) + 250
-    #                     y = 200 * math.cos(5.495-.0785*velocity) + 250
-    #                     self.canvas.coords(self.speed_hand, 250, 250, int(x), int(y))
-    #                     self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
-    #                     time.sleep(.05)
-    #                     self.canvas.update()
-    #     except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-    #         GPIO.cleanup()        # cleanup all GPIO
-    #
-    #     except ValueError:
-    #         pass
+    def updateSpeed(self):
+        hall = 18
+        start = 0
+        end = 0
+        wheel_c = 82   #in for wheel circumference
+        in2mi = 63360  #inches in a mile
+        sec2hr = 3600  #seconds in an hour
+        velocity = 0
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
+        try:
+            start = time.time()
+            while True:
+                if GPIO.input(hall) == 0: # Hall effect is triggered
+                    end = time.time()
+                    elapsedTime = (end - start)
+                    start = end
+                    if elapsedTime < 0.08:
+                        velocity = 0
+                        #print(velocity)
+                        x = 200 * math.sin(5.495) + 550
+                        y = 200 * math.cos(5.495) + 250
+                        time.sleep(.05)
+                        self.canvas.coords(self.speed_hand, 550, 250, int(x), int(y))
+                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
+                        self.canvas.update()
+                    else:
+                        velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
+                        print(velocity)
+                        #print(elapsedTime)
+                        time.sleep(0.025)
+                        x = 200 * math.sin(5.495-.0785*velocity) + 550
+                        y = 200 * math.cos(5.495-.0785*velocity) + 250
+                        self.canvas.coords(self.speed_hand, 550, 250, int(x), int(y))
+                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
+                        time.sleep(.05)
+                        self.canvas.update()
+        except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
+            GPIO.cleanup()        # cleanup all GPIO
+
+        except ValueError:
+            pass
 
     def updateRPM(self, pRPM=None):
         if pRPM is None:
@@ -169,7 +191,7 @@ class Speed(object):
                 pass
         else:
             try:
-                self.canvas.itemconfigure(self.kphLabel, text=str(pRPM))
+                self.canvas.itemconfigure(self.mphLabel, text=str(pRPM))
                 self.canvas.update()
             except ValueError:
                 pass
