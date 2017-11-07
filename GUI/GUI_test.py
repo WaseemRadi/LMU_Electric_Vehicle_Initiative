@@ -83,10 +83,12 @@ class Speed(object):
 
         self.mainFrame = ttk.Frame(self.root, padding="0 0 0 0", style=self.styleName)
         self.mainFrame.grid(column=3, row=1, sticky=(N, E, W, S))
+        self.mainFrame.pack(fill = BOTH, expand = 1)
 
     def makeCanvas(self):
         self.canvas = Canvas(self.mainFrame, background=self.backGroundColor, width=self.canvasWidth, height=self.canvasHeight, bg="black")
         self.canvas.grid(column=0, row=0, sticky=(N, E, W, S))
+        self.canvas.pack(fill = BOTH, expand = 1)
         # self.hubCircle = self.canvas.create_oval(self.circleX1, self.circleY1, self.circleX2, self.circleY2, outline=self.outlineColor, fill=self.backGroundFillColor)
         self.left_arc = self.canvas.create_arc(75, 40, 500, 465 , start = 55, extent = 250, fill = '#C0C0C0')
         self.left_art2 = self.canvas.create_arc(100, 65, 475, 440, start = 55, extent = 250 ,fill = 'Black')
@@ -235,7 +237,9 @@ class Speed(object):
                 pass
         self.root.after(self.frame_rate, self.updateRPM)
 
-dash = Speed(Tk())
+root = Tk()
+root.tk.call('tk','scaling',1.85)
+dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
 #dash.root.after(1,dash.updateSpeed)
 dash.root.mainloop()
