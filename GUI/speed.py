@@ -26,7 +26,6 @@ from tkinter import *
 from tkinter import ttk
 import math
 import time
-import RPi.GPIO as GPIO
 
 
 class Speed(object):

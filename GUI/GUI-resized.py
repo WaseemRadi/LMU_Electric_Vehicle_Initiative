@@ -1,5 +1,6 @@
-'''
 
+
+'''
 Copyright (c) 2017 Keola Ramirez, Tony Nyguen, Waseem Radi
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -19,7 +20,6 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 '''
 
 from tkinter import *
@@ -31,10 +31,7 @@ import time
 
 class Speed(object):
     def __init__(self, root):
-
-
         self.root = root
-
         self.initializeValues()
         self.makeMainFrame()
         self.makeCanvas()
@@ -55,16 +52,16 @@ class Speed(object):
         self.degree = u'\N{DEGREE SIGN}' + "F"
         self.rangeFont = "helvetica 25 bold"
 
-        self.canvasWidth = 1200
-        self.canvasHeight = 500
-        self.circleX1 = 325
-        self.circleX2 = 775
-        self.circleY1 = 25
-        self.circleY2 = 475
+        self.canvasWidth = 800
+        self.canvasHeight = 450
+        self.circleX1 = 225
+        self.circleX2 = 575
+        self.circleY1 = 50
+        self.circleY2 = 400
 
         self.frame_rate = 80
-        self.centerX = 550
-        self.centerY = 350
+        self.centerX = 400
+        self.centerY = 240
         self.maxSpeed = 60
 
         self.speed = "0"
@@ -76,40 +73,35 @@ class Speed(object):
 
         self.tempCounter = 0
 
-        self.scalingFactor = 0.5
-
     def makeMainFrame(self):
         self.styleName = "TFrame"
         self.style = ttk.Style()
         self.style.configure(self.styleName, background="black")
 
         self.mainFrame = ttk.Frame(self.root, padding="0 0 0 0", style=self.styleName)
-        self.mainFrame.grid(column=1, row=1, sticky=(N, E, W, S))
-        self.mainFrame.rowconfigure(0, weight=1)
-        self.mainFrame.columnconfigure(0, weight=1)
-        self.mainFrame.pack(fill = BOTH)
+        self.mainFrame.grid(column=3, row=1, sticky=(N, E, W, S))
+        # self.mainFrame.pack(fill = BOTH, expand = 1)
 
     def makeCanvas(self):
         self.canvas = Canvas(self.mainFrame, background=self.backGroundColor, width=self.canvasWidth, height=self.canvasHeight, bg="black")
         self.canvas.grid(column=0, row=0, sticky=(N, E, W, S))
-        self.canvas.bind()
-        self.canvas.pack(fill = BOTH)
+        # self.canvas.pack(fill = BOTH, expand = 1)
         # self.hubCircle = self.canvas.create_oval(self.circleX1, self.circleY1, self.circleX2, self.circleY2, outline=self.outlineColor, fill=self.backGroundFillColor)
-        self.left_arc = self.canvas.create_arc(75, 40, 500, 465 , start = 55, extent = 250, fill = '#C0C0C0')
-        self.left_art2 = self.canvas.create_arc(100, 65, 475, 440, start = 55, extent = 250 ,fill = 'Black')
-        self.right_arc = self.canvas.create_arc(600, 40, 1025, 465 , start = -125, extent = 250, fill = '#C0C0C0')
-        self.right_art2 = self.canvas.create_arc(625, 65, 1000, 440, start = -125, extent = 250 ,fill = 'Black')
-        self.display = self.canvas.create_oval(self.circleX1 , self.circleY1, self.circleX2, self.circleY2, fill = '#C0C0C0')
-        self.display2 = self.canvas.create_oval(self.circleX1+25, self.circleY1+25, self.circleX2-25, self.circleY2-25, fill = 'Black')
+        self.display = self.canvas.create_oval(25, 50, 375, 400, fill = '#C0C0C0')
+        self.display2 = self.canvas.create_oval(50, 75, 350, 375, fill = 'white')
+        self.display3 = self.canvas.create_oval(425, 50, 775, 400, fill = '#C0C0C0')
+        self.display4 =  self.canvas.create_oval(450, 75, 750, 375, fill = 'white')
+        self.display5 = self.canvas.create_oval(self.circleX1, self.circleY1, self.circleX2, self.circleY2, fill = '#C0C0C0')
+        self.display6 = self.canvas.create_oval(self.circleX1+25, self.circleY1+25, self.circleX2-25, self.circleY2-25, fill = 'Black')
 
-        self.speedBox = self.canvas.create_rectangle(self.centerX-70, self.centerY-25, self.centerX+70, self.centerY+80, fill='#702B0B', outline='#C0C0C0')
+        self.speedBox = self.canvas.create_rectangle(self.centerX-50, self.centerY+60, self.centerX+50, self.centerY+120, fill='#702B0B', outline='#C0C0C0')
 
         self.speedText = self.canvas.create_text(self.centerX, self.centerY, text=self.speed, fill=self.textColor, font=self.speedFont)
         self.mphLabel = self.canvas.create_text(self.centerX, self.centerY + 28, text="mph", fill=self.textColor, font='helvetica 16 bold')
         self.powerText = self.canvas.create_text(self.centerX-275, self.centerY, text=self.power, fill=self.textColor, font=self.speedFont)
         self.kwLabel = self.canvas.create_text(self.centerX-275, self.centerY + 28, text="kW", fill=self.textColor, font='helvetica 16 bold')
-        self.power_hand = self.canvas.create_line(275, 250, 180*math.sin(5.590) + 275, 180*math.cos(5.590) + 250, width = '4', fill = 'blue')
-        self.speed_hand = self.canvas.create_line(550, 250,  200 * math.sin(5.495) + 550,  200 * math.cos(5.495) + 250, width = '4', fill = 'red')
+        self.power_hand = self.canvas.create_line(200, 225, 150*math.sin(5.495) + 200, 150*math.cos(5.495) + 225, width = '4', fill = 'blue')
+        self.speed_hand = self.canvas.create_line(400, 225,  150 * math.sin(5.495) + 400,  150 * math.cos(5.495) + 225, width = '4', fill = 'red')
 
         self.voltageMeter = self.canvas.create_rectangle(775, 105, 875, 145, fill='#702B0B', outline='#C0C0C0')
         self.voltageText = self.canvas.create_text(813, 125, text = self.voltage, fill = self.textColor, font = self.voltageFont)
@@ -123,48 +115,53 @@ class Speed(object):
         self.rangeText = self.canvas.create_text(870, 250, text = "Range: " + self.range, fill = self.textColor, font = self.rangeFont)
         self.rangeSymbol = self.canvas.create_text(955, 250, text = "mi", fill = self.textColor, font = self.rangeFont)
 
-        self.canvas.add_tag("all")
+        count = 60
         for i in range(2,15):
           ang = i * math.pi / 8
-          x = 212 * math.sin(ang) + 550
-          y = 212 * math.cos(ang) + 250
-          x1 = 200 * math.sin(ang) + 550
-          y1 = 200 * math.cos(ang) + 250
-          x_arc = 200 * math.sin(ang) + 290
-          y_arc = 212 * math.cos(ang) + 255
-          x1_arc = 200 * math.sin(ang) + 290
-          y1_arc = 200 * math.cos(ang) + 255
-        #   if i > 6:
-        #       self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
-          self.canvas.create_line(int(x), int(y), int(x1), int(y1), fill ='white')
+          x = 175 * math.sin(ang) + 400
+          y = 175 * math.cos(ang) + 225
+          x1 = 149 * math.sin(ang) + 400
+          y1 = 149 * math.cos(ang) + 225
+          x2 = 135 * math.sin(ang) + 400
+          y2 = 135 * math.cos(ang) + 225
+
+          self.canvas.create_line(int(x), int(y), int(x1), int(y1))
+          self.canvas.create_text(x2, y2, text= str(count), font = 'helvetica 10 bold', fill = 'blue')
+          count -= 5
+
+        for i in range(4,29):
+          ang = i * math.pi / 16
+          x = 175 * math.sin(ang) + 400
+          y = 175 * math.cos(ang) + 225
+          x1 = 160 * math.sin(ang) + 400
+          y1 = 160 * math.cos(ang) + 225
+          self.canvas.create_line(int(x), int(y), int(x1), int(y1))
 
         count = 60
-        power_count = 30
-        for i in range(2,15):
-          ang = i * math.pi / 8
-          x1 = 185 * math.sin(ang) + 550
-          y1 = 185 * math.cos(ang) + 250
-          x_arc = 175 * math.sin(ang) + 290
-          y_arc = 175 * math.cos(ang) + 255
-          if i > 7:
-              self.canvas.create_text(x_arc, y_arc, fill = 'white', text = str(count), font = self.markerFont)
-          canvas_id = self.canvas.create_text(x1, y1, fill = 'white', font = self.markerFont)
-          self.canvas.itemconfig(canvas_id, text= str(count))
-          count = count - 5
+        for i in range(1, 8):
+          ang = i * math.pi / 4
+          x = 175 * math.sin(ang) + 200
+          y = 175 * math.cos(ang) + 225
+          x1 = 149 * math.sin(ang) + 200
+          y1 = 149 * math.cos(ang) + 225
+          x2 = 135 * math.sin(ang) + 200
+          y2 = 135 * math.cos(ang) + 225
 
-        for i in range(3,30):
+          self.canvas.create_line(int(x), int(y), int(x1), int(y1))
+          if i > 3:
+              self.canvas.create_text(x2, y2, text= str(count), font = 'helvetica 10 bold', fill = 'blue')
+          count -= 10
+
+        for i in range(16,29):
           ang = i * math.pi / 16
-          x = 222 * math.sin(ang) + 550
-          y = 222 * math.cos(ang) + 250
-          x1 = 210 * math.sin(ang) + 550
-          y1 = 210 * math.cos(ang) + 250
-          x_arc = 212 * math.sin(ang) + 290
-          y_arc = 212 * math.cos(ang) + 255
-          x1_arc = 200 * math.sin(ang) + 290
-          y1_arc = 200 * math.cos(ang) + 255
-          if i > 13:
-              self.canvas.create_line(int(x_arc), int(y_arc), int(x1_arc), int(y1_arc), fill ='white')
-          self.canvas.create_line(int(x), int(y), int(x1), int(y1),fill='white')
+          x = 175 * math.sin(ang) + 200
+          y = 175 * math.cos(ang) + 225
+          x1 = 160 * math.sin(ang) + 200
+          y1 = 160 * math.cos(ang) + 225
+          self.canvas.create_line(int(x), int(y), int(x1), int(y1))
+
+
+
 
     def clock(self):
         self.time = time.strftime('%m/%d/%Y     %I:%M')
@@ -196,8 +193,8 @@ class Speed(object):
                     if elapsedTime < 0.08:
                         velocity = 0
                         #print(velocity)
-                        x = 200 * math.sin(5.495) + 550
-                        y = 200 * math.cos(5.495) + 250
+                        x = 150 * math.sin(5.495) + 400
+                        y = 150 * math.cos(5.495) + 225
                         time.sleep(.05)
                         self.canvas.coords(self.speed_hand, 550, 250, int(x), int(y))
                         self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
@@ -207,8 +204,8 @@ class Speed(object):
                         print(velocity)
                         #print(elapsedTime)
                         time.sleep(0.025)
-                        x = 200 * math.sin(5.495-.0785*velocity) + 550
-                        y = 200 * math.cos(5.495-.0785*velocity) + 250
+                        x = 150 * math.sin(5.495-.0785*velocity) + 400
+                        y = 150 * math.cos(5.495-.0785*velocity) + 225
                         self.canvas.coords(self.speed_hand, 550, 250, int(x), int(y))
                         self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
                         time.sleep(.05)
@@ -243,9 +240,7 @@ class Speed(object):
         self.root.after(self.frame_rate, self.updateRPM)
 
 root = Tk()
-root.tk.call('tk','scaling',1)
-width, height = root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry('%dx%d+0+0' % (width,height))
+#root.tk.call('tk','scaling',1.85)
 dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
 #dash.root.after(1,dash.updateSpeed)
