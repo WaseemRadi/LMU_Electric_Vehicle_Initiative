@@ -24,7 +24,7 @@ from tkinter import *
 from tkinter import ttk
 import math
 import time
-# import smbus
+import smbus
 import RPi.GPIO as GPIO
 
 
