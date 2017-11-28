@@ -182,16 +182,7 @@ class Speed(object):
         self.canvas.itemconfig(self.day, text = self.day2)
         self.root.after(200, self.change_date)
 
-    def update(self):
-        hall = 18
-        start = 0
-        end = 0
-        wheel_c = 82   #in for wheel circumference
-        in2mi = 63360  #inches in a mile
-        sec2hr = 3600  #seconds in an hour
-        velocity = 0
-        #!/usr/bin/python
-
+    def updateVoltage():
         # I2C-address of YL-40 PFC8591
         address = 0x48
 
@@ -203,66 +194,69 @@ class Speed(object):
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
+        try:
+            # update voltage box
+            Voltage_8bit=PFC8591.read_byte(address) # = i2cget -y 1 0x48
+            Voltage= (Voltage_8bit * 0.0128 + .4108) * 10 # convert 8 bit number to voltage 16.5/256 | 16.5V max voltage for 0xff (=3.3V analog output signal)
+            #print(Voltage)
+            self.canvas.itemconfigure(self.voltageText, text=str(round(Voltage)))
+            self.canvas.update()
+            self.root.after(100, self.updateVoltage)
 
-        def updateVoltage():
-            try:
-                # update voltage box
-                Voltage_8bit=PFC8591.read_byte(address) # = i2cget -y 1 0x48
-                Voltage= (Voltage_8bit * 0.0128 + .4108) * 10 # convert 8 bit number to voltage 16.5/256 | 16.5V max voltage for 0xff (=3.3V analog output signal)
-                #print(Voltage)
-                self.canvas.itemconfigure(self.voltageText, text=str(round(Voltage)))
-                self.canvas.update()
-                time.sleep(.01)
-                v = threading.Thread(target=updateVoltage)
-                v.start()
-            except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-                GPIO.cleanup()        # cleanup all GPIO
+        except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
+            GPIO.cleanup()        # cleanup all GPIO
 
-            except ValueError:
-                pass
+        except ValueError:
+            pass
 
-        # update speedometer
-        def updateSpeed():
-            try:
-                start = time.time()
+    # update speedometer
+    def updateSpeed():
+        hall = 18
+        start = 0
+        end = 0
+        wheel_c = 82   #in for wheel circumference
+        in2mi = 63360  #inches in a mile
+        sec2hr = 3600  #seconds in an hour
+        velocity = 0
 
-                if GPIO.input(hall) == 0: # Hall effect is triggered
-                    end = time.time()
-                    elapsedTime = (end - start)
-                    start = end
-                    if elapsedTime < 0.08:
-                        velocity = 0
-                        # print(velocity)
-                        x = 150 * math.sin(5.495) + 400
-                        y = 150 * math.cos(5.495) + 225
-                        time.sleep(.05)
-                        self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
-                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
-                        self.canvas.update()
-                    elif elapsedTime >= 0.08:
-                        velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
-                        # print(velocity)
-                        # print(elapsedTime)
-                        time.sleep(0.025)
-                        x = 150 * math.sin(5.495-.0785*velocity) + 400
-                        y = 150 * math.cos(5.495-.0785*velocity) + 225
-                        self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
-                        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
-                        time.sleep(.05)
-                        self.canvas.update()
-                t = threading.Thread(target=updateSpeed)
-                t.start()
+        try:
+            start = time.time()
 
-            except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
-                GPIO.cleanup()        # cleanup all GPIO
+            if GPIO.input(hall) == 0: # Hall effect is triggered
+                end = time.time()
+                elapsedTime = (end - start)
+                start = end
+                if elapsedTime < 0.08:
+                    velocity = 0
+                    # print(velocity)
+                    x = 150 * math.sin(5.495) + 400
+                    y = 150 * math.cos(5.495) + 225
+                    time.sleep(.05)
+                    self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
+                    self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
+                    self.canvas.update()
+                elif elapsedTime >= 0.08:
+                    velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
+                    # print(velocity)
+                    # print(elapsedTime)
+                    time.sleep(0.025)
+                    x = 150 * math.sin(5.495-.0785*velocity) + 400
+                    y = 150 * math.cos(5.495-.0785*velocity) + 225
+                    self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
+                    self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
+                    time.sleep(.05)
+                    self.canvas.update()
+            self.root.after(10, self.updateSpeed)
 
-            except ValueError:
-                pass
+
+        except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
+            GPIO.cleanup()        # cleanup all GPIO
+
+        except ValueError:
+            pass
 
 root = Tk()
 #root.tk.call('tk','scaling',1.85)
 dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
-##dash.root.after(1,dash.updateVoltage)
-dash.root.after(1,dash.update)
 dash.root.mainloop()
