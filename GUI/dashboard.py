@@ -40,6 +40,8 @@ class Speed(object):
         self.change_time()
         self.date()
         self.change_date()
+##        self.updateVoltage()
+        self.updateSpeed()
         
 
     def initializeValues(self):
@@ -182,6 +184,11 @@ class Speed(object):
         self. day2 = time.strftime('%m/%d/%Y')
         self.canvas.itemconfig(self.day, text = self.day2)
         self.root.after(80, self.change_date)
+    
+    def updateVoltage(self):
+        self.root.after(80, self.updateVoltage)
+
+        
 
     def updateSpeed(self):
         hall = 18
@@ -197,21 +204,23 @@ class Speed(object):
         GPIO.setup(hall, GPIO.IN) # Hall effect sensor as input
         try:
             start = time.time()
-            ser = serial.Serial('/dev/ttyACM1', 9600)
+            tempStart = time.time()
+            ser = serial.Serial('/dev/ttyACM0', 9600)
             while True:
-                volt1 = ser.readline()
-                volt2 = volt1.decode("utf-8")
-                volt3 = re.sub('[\n]', '', volt2)
-                self.canvas.itemconfigure(self.voltageText, text=(volt3))
-                self.canvas.update()
+##                volt1 = ser.readline()
+##                volt2 = volt1.decode("utf-8")
+##                volt3 = re.sub('[\n]', '', volt2)
+##                self.canvas.itemconfigure(self.voltageText, text=(volt3))
+##                self.canvas.update()
               
                 if GPIO.input(hall) == 0: # Hall effect is triggered
                     end = time.time()
                     elapsedTime = (end - start)
+                    
                     start = end
                     print(elapsedTime)
 
-                    if elapsedTime < 0.030:
+                    if elapsedTime < 0.036:
                         velocity = 0
                         print(velocity)
                         x = 150 * math.sin(5.495) + 400
@@ -219,6 +228,7 @@ class Speed(object):
                         self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
                         self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
                         self.canvas.update()
+                        
                     else:
                         velocity = round((sec2hr/elapsedTime * wheel_c )/in2mi,2)
                         print(velocity)
@@ -229,10 +239,20 @@ class Speed(object):
                         #time.sleep(.05)
                         self.canvas.update()
                     time.sleep(0.025)
-                        
-                      
-            
-                        
+                #else:
+                #    tempEnd = time.time()    
+                #    tempElapsed = start - tempEnd
+                #   if tempElapsed > 3:
+                #        velocity = 0
+                #        print(velocity)
+                #        x = 150 * math.sin(5.495) + 400
+                #        y = 150 * math.cos(5.495) + 225
+                #        self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
+                #        self.canvas.itemconfigure(self.speedText, text=str(math.floor(velocity)))
+                #        self.canvas.update()
+            self.root.after(120, self.updateSpeed) 
+
+                       
         except KeyboardInterrupt: # If CTRL+C is pressed, exit cleanly:
             GPIO.cleanup()        # cleanup all GPIO
 
@@ -240,12 +260,10 @@ class Speed(object):
             pass
 
 
-
 root = Tk()
 #root.tk.call('tk','scaling',1.85)
 dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
 ##dash.root.after(1,dash.updateVoltage)
-dash.root.after(1,dash.updateSpeed)
 dash.root.mainloop()
 
