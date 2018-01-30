@@ -29,6 +29,9 @@ import serial
 import re
 import RPi.GPIO as GPIO
 import random
+import Adafruit_ADS1x15
+import sys
+import Adafruit_DHT
 
 
 class Speed(object):
@@ -42,6 +45,8 @@ class Speed(object):
         self.date()
         self.change_date()
         self.updateVoltage()
+        self.updateTemperature()
+        self.isError()
         self.updateSpeed()
         
 
@@ -54,6 +59,7 @@ class Speed(object):
         self.outlineColor = "white"
         self.backGroundFillColor = "black"
         self.fillColor = "black"
+        self.errorColor = "yellow"
 
         self.canvasWidth = 800 
         self.canvasHeight = 450
@@ -76,7 +82,8 @@ class Speed(object):
 
         self.tempCounter = 0
         
-
+        self.adc = Adafruit_ADS1x15.ADS1115()
+        self.GAIN = 1
 
     def makeMainFrame(self):
         self.styleName = "TFrame"
@@ -107,7 +114,8 @@ class Speed(object):
         self.power_hand = self.canvas.create_line(200, 225, 150*math.sin(5.495) + 200, 150*math.cos(5.495) + 225, width = '4', fill = 'blue')
         self.speed_hand = self.canvas.create_line(400, 225, 150 * math.sin(5.495) + 400,  150 * math.cos(5.495) + 225, width = '4', fill = 'red')
 
-        self.timeBox = self.canvas.create_rectangle(self.centerX-52, self.centerY+60, self.centerX+52, self.centerY+120, fill='#702B0B', outline='#C0C0C0')
+        self.timeBox = self.canvas.create_rectangle(self.centerX-52, self.centerY+55, self.centerX+52, self.centerY+120, fill='#702B0B', outline='#C0C0C0')
+        self.errorText = self.canvas.create_text(self.centerX, self.centerY + 70, text = '', fill = self.errorColor, font = "helvetica 12 bold")
         
         self.voltageBox = self.canvas.create_rectangle(570, 105, 670, 145, fill='#702B0B', outline='#C0C0C0')
         self.voltageText = self.canvas.create_text(607, 125, text = self.voltage, fill = self.textColor, font = "helvetica 24 bold")
@@ -189,19 +197,34 @@ class Speed(object):
         self.root.after(80, self.change_date)
     
     def updateVoltage(self):
-        i = 0
-        self.ser = serial.Serial('/dev/ttyACM1', 115200, timeout = None)
-        while i < 5:
-            volt1 = self.ser.readline()
-            print(volt1)
-            volt2 = volt1.decode("utf-8")
-            volt3 = re.sub('[\n]', '', volt2)
-            self.canvas.itemconfigure(self.voltageText, text=(volt3))
-            self.canvas.update()
-            i+=1
-        self.root.after(80, self.updateVoltage)
-    
+        value = float(self.adc.read_adc(0, gain=self.GAIN))
+        self.voltage = (value / 8032) * 10
 
+        self.canvas.itemconfigure(self.voltageText, text=("%.1f" % self.voltage))
+        self.canvas.update()
+        self.root.after(30, self.updateVoltage)
+        
+    def updateTemperature(self):
+        self.humidity, self.temperature = Adafruit_DHT.read_retry(11,4)
+        self.temperature = self.temperature * 9 / 5 + 32
+        self.canvas.itemconfigure(self.temperatureText, text=('{0:0.1f}'.format(self.temperature)))
+        self.canvas.update()
+        self.root.after(60, self.updateTemperature)    
+    
+    def isError(self):
+        
+        
+        if self.voltage <= 9.5 and self.temperature >=75.0:
+            self.canvas.itemconfigure(self.errorText, text = 'Low V High T', font = "helvetica 11 bold")
+        elif self.temperature >= 75.0:
+            self.canvas.itemconfigure(self.errorText, text = 'High Temp')
+        elif self.voltage <= 9.5:
+            self.canvas.itemconfigure(self.errorText, text = 'Low Voltage')
+        else:
+            self.canvas.itemconfigure(self.errorText, text = '')
+        self.canvas.update()
+        self.root.after(60, self.isError)
+        
     def updateSpeed(self):
         hall = 18
         start = 0
@@ -230,7 +253,7 @@ class Speed(object):
                     start = end
                     print(elapsedTime)
 
-                    if elapsedTime < 0.026:
+                    if elapsedTime < 0.040:
                         velocity = 0
                         print(velocity)
                         x = 150 * math.sin(5.495) + 400
@@ -254,10 +277,8 @@ class Speed(object):
                 else:
                     tempEnd = time.time()    
                     tempElapsed = tempEnd - start
-                    print(tempElapsed)
                     if tempElapsed > 3.0:
                         velocity = 0
-                        print(velocity)
                         x = 150 * math.sin(5.495) + 400
                         y = 150 * math.cos(5.495) + 225
                         self.canvas.coords(self.speed_hand, 400, 225, int(x), int(y))
