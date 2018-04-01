@@ -24,8 +24,8 @@ from tkinter import *
 from tkinter import ttk
 import math
 import time
-import smbus
-import RPi.GPIO as GPIO
+# import smbus
+# import RPi.GPIO as GPIO
 
 
 class Speed(object):
@@ -43,6 +43,7 @@ class Speed(object):
     def initializeValues(self):
         self.speedFont = "helvetica 45 bold"
         self.mphFont = "helvetica 10 bold"
+        self.gearFont = "helvetica 40 bold"
         self.textColor = "white"
         self.markerFont = "helvetica 15 bold"
         self.backGroundColor = "#000000"
@@ -62,6 +63,9 @@ class Speed(object):
         self.centerY = 240
         self.maxSpeed = 60
 
+        self.park = "P"
+        self.drive = "D"
+        self.reverse = "R"
         self.speed = "0"
         self.power = "0"
         self.degree = u'\N{DEGREE SIGN}' + "F"
@@ -91,6 +95,7 @@ class Speed(object):
 
         self.speedBox = self.canvas.create_rectangle(self.centerX-40, self.centerY-103, self.centerX+40, self.centerY-28, fill='#702B0B', outline='#C0C0C0')
 
+
         self.speedText = self.canvas.create_text(self.centerX, self.centerY - 72, text=self.speed, fill=self.textColor, font=self.speedFont)
         self.mphLabel = self.canvas.create_text(self.centerX, self.centerY - 42, text="mph", fill=self.textColor, font=self.mphFont)
 
@@ -110,10 +115,12 @@ class Speed(object):
         self.temperatureText = self.canvas.create_text(638, 185, text = self.temperature, fill = self.textColor, font = "helvetica 24 bold")
         self.temperatureSymbol = self.canvas.create_text(685, 185, text = self.degree, fill = self.textColor, font = "helvetica 24 bold")
 
-        self.rangeBox = self.canvas.create_rectangle(590, 225, 735, 265, fill='#702B0B', outline='#C0C0C0')
-        self.rangeText = self.canvas.create_text(630, 245, text = "Range: ", fill = self.textColor, font = "helvetica 16")
-        self.rangeValue = self.canvas.create_text(685, 245, text = self.range, fill = self.textColor, font = "helvetica 18 bold")
-        self.rangeSymbol = self.canvas.create_text(720, 245, text = "mi", fill = self.textColor, font = "helvetica 16")
+        self.rangeBox = self.canvas.create_rectangle(620, 215, 680, 270, fill='#702B0B', outline='#C0C0C0')
+        # self.rangeText = self.canvas.create_text(630, 245, text = "Range: ", fill = self.textColor, font = "helvetica 16")
+        # self.rangeValue = self.canvas.create_text(685, 245, text = self.range, fill = self.textColor, font = "helvetica 18 bold")
+        # self.rangeSymbol = self.canvas.create_text(720, 245, text = "mi", fill = self.textColor, font = "helvetica 16")
+
+        self.gearText = self.canvas.create_text(650, 245, text = self.park, fill = self.textColor, font = self.gearFont)
 
         count = 60
         for i in range(2,15):
@@ -251,5 +258,5 @@ root = Tk()
 dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
 ##dash.root.after(1,dash.updateVoltage)
-dash.root.after(1,dash.updateSpeed)
+# dash.root.after(1,dash.updateSpeed)
 dash.root.mainloop()

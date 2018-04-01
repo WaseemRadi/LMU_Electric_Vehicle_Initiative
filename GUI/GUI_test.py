@@ -84,25 +84,13 @@ class Speed(object):
         self.style.configure(self.styleName, background="black")
 
         self.mainFrame = ttk.Frame(self.root, padding="0 0 0 0", style=self.styleName)
-<<<<<<< HEAD
-        self.mainFrame.grid(column=1, row=1, sticky=(N, E, W, S))
-        self.mainFrame.rowconfigure(0, weight=1)
-        self.mainFrame.columnconfigure(0, weight=1)
-        self.mainFrame.pack(fill = BOTH)
-=======
         self.mainFrame.grid(column=3, row=1, sticky=(N, E, W, S))
         self.mainFrame.pack(fill = BOTH, expand = 1)
->>>>>>> fd14045936aaadab14eb4c985643932a167ed7a6
 
     def makeCanvas(self):
         self.canvas = Canvas(self.mainFrame, background=self.backGroundColor, width=self.canvasWidth, height=self.canvasHeight, bg="black")
         self.canvas.grid(column=0, row=0, sticky=(N, E, W, S))
-<<<<<<< HEAD
-        self.canvas.bind()
-        self.canvas.pack(fill = BOTH)
-=======
         self.canvas.pack(fill = BOTH, expand = 1)
->>>>>>> fd14045936aaadab14eb4c985643932a167ed7a6
         # self.hubCircle = self.canvas.create_oval(self.circleX1, self.circleY1, self.circleX2, self.circleY2, outline=self.outlineColor, fill=self.backGroundFillColor)
         self.left_arc = self.canvas.create_arc(75, 40, 500, 465 , start = 55, extent = 250, fill = '#C0C0C0')
         self.left_art2 = self.canvas.create_arc(100, 65, 475, 440, start = 55, extent = 250 ,fill = 'Black')
@@ -252,13 +240,7 @@ class Speed(object):
         self.root.after(self.frame_rate, self.updateRPM)
 
 root = Tk()
-<<<<<<< HEAD
-root.tk.call('tk','scaling',1)
-width, height = root.winfo_screenwidth(), root.winfo_screenheight()
-root.geometry('%dx%d+0+0' % (width,height))
-=======
 root.tk.call('tk','scaling',1.85)
->>>>>>> fd14045936aaadab14eb4c985643932a167ed7a6
 dash = Speed(root)
 print("Lets begin! Press CTRL+C to exit")
 #dash.root.after(1,dash.updateSpeed)
